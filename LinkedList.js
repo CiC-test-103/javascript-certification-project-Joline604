@@ -51,9 +51,9 @@ class LinkedList {
    * - Think about the null case
    * - Think about adding to the 'end' of the LinkedList (Hint: tail)
    */
-    addStudent(newStudent) {
-    let newNode = new Node(newStudent); // Create a new Node with the Student data
-    if (!this.head) { // If Linked List is empty, this newNode (student) is both head and tail
+    addStudent(newStudent) { // This function will add a new student to the end of the Linked List
+    const newNode = new Node(newStudent); // Creating a new Node with the newStudent data
+    if (!this.head) { // If Linked List is empty, this newNode (student) is both head and tail. !this.head is a falsy value, so I will set the head and tail to the newNode
       this.head = newNode; // Set the head to the new node. If its empty, the newNode will be the head and tail of the Linked List
       this.tail = newNode; // Set the tail to the new node. If its empty, the newNode will be the head and tail of the Linked List
     } else { // If Linked List is not empty, we will add the newNode to the end of the Linked List
@@ -76,13 +76,13 @@ class LinkedList {
   removeStudent(email) { // This function will remove a student by email
     // I am checking if the Linked List is empty, if it is, it will return nothing
     // I am also checking if the head is null, which means the Linked List is empty
-    if (!this.head) { // If the Linked List is empty, there is nothing to remove. !this.head is a falsy value, so I will return nothing
-      return; // I will return nothing, so I will not console.log anything
-    }
+    if (!this.head) return;  // If the Linked List is empty, there is nothing to remove. !this.head is a falsy value, so I will return nothing
+    
     let current = this.head; // Start at the head of the Linked List
     let previous = null; // Previous node to keep track of the node before current
+    
     while (current) { // Creating a loop. While there is a current node, I will keep traversing the Linked List
-      if (current.data.email === email) { // If the current node's data email matches the email we are looking for
+      if (current.data.getEmail() === email) { // If the current nodes data email matches the email we are looking for. Using getEmail() from the Student.js file to access the private field #email in the Student class
         if (previous) { // If there is a previous node, we will link it to the next node
           previous.next = current.next; // Link the previous node to the next node
         } else { // If there is no previous node, it means we are at the head of the Linked List
@@ -109,14 +109,14 @@ class LinkedList {
   findStudent(email) { // This function will find a student by email
     let current = this.head; // Start at the head of the Linked List 
     while (current) { // While there is a current node, I will keep traversing the Linked List
-      if (current.data.email === email) { // Checking if the current node's data email matches the email we are looking for. I am using === to compare the email because I want it to be an exact match (using strict equality)
+      if (current.data.getEmail() === email) { // Checking if the current node's data email matches the email we are looking for. I am using === to compare the email because I want it to be an exact match (using strict equality). using getEmail() from the Student.js file to access the private field #email in the Student class
         return current.data; // Return the student data if found, wont continue the loop
       }
       current = current.next; // Move to the next node if the current node's email does not match the email we are looking for
       // This will continue to traverse the Linked List until it finds the student or reaches the end
     }
-    // If we reach here, it means the student was not found, so we return -1
-    // I am not console.logging anything, as the index.js file will handle the console logging
+    // If we reach here, it means the student was not found, which is why we return -1, which indicates that the student does not exist
+    
 
     // TODO //
     return -1 
@@ -145,9 +145,9 @@ class LinkedList {
    */
   displayStudents() { // This function will display all students in the Linked List
     let current = this.head; // Starts at the first node (head) of the Linked List to loop through the nodes
-    let studentsArray = []; // Creates an array to store the student names
+    const studentsArray = []; // Create an array to store the student names
     while (current) { // Loop through the Linked List until there are no more nodes. Then the loop will stop
-      studentsArray.push(current.data.name); // Add the student name to the array
+      studentsArray.push(current.data.getName()); // Add the student name to the array. Using getName() from the Student.js file to get the name of the student to access the private field #name in the Student class
       current = current.next; // Move to the next node
     }
     // This will return a string of student names separated by commas
@@ -164,14 +164,14 @@ class LinkedList {
    */
   #sortStudentsByName() { // This function will sort the students in the Linked List by name. It is a private method, so it cannot be accessed outside of this class
     let current = this.head; // Start at the head of the Linked List  
-    let studentsArray = []; // Create an array to store the student names
+    const studentsArray = []; // Create an array to store the student names
     while (current) { // While there is a current node, I will keep traversing  the Linked List
       studentsArray.push(current.data); // Push the student data to the array
       current = current.next; // Move to the next node
     }
 
     // TODO // I am sorting the students in the Linked List by name and returning a sorted array
-    return studentsArray.sort((a, b) => a.name.localeCompare(b.name)); // This will return a sorted array of student names alphabetically. I used this method (Sorting non-ASCII characters) because names may not be in English
+    return studentsArray.sort((a, b) => a.getName().localeCompare(b.getName())); // This will return a sorted array of student names alphabetically. I used this method (Sorting non-ASCII characters) because names may not be in English. Grabbing the name using getName() from the Student.js file to access the private field #name in the Student class
   }
 
   /**
@@ -183,16 +183,16 @@ class LinkedList {
    */
   filterBySpecialization(specialization) { // This function will filter the students in the Linked List by specialization
     let current = this.head; // Start at the head of the Linked List
-    let studentsArray = []; // Create an array to store the student names that match the specialization
+    const filtered = []; // Create an array to store the student names
     while (current) { // While there is a current node, I will keep traversing the Linked List. Creating a loop until we reach the end of the Linked List
-      if (current.data.specialization === specialization) { // checking if the current node's data specialization matches the specialization
-        studentsArray.push(current.data); // If it matches adds the student data to the array
+      if (current.data.getSpecialization() === specialization) { // checking if the current node's data specialization matches the specialization. Using getSpecialization() from the Student.js file to access the private field #specialization in the Student class
+        filtered.push(current.data); // If it matches adds the student data to the array
       }
       current = current.next; // Move to the next node in the Linked List
     }
 
     // TODO
-    return this.#sortStudentsByName(studentsArray); // This will return a sorted array of student names alphabetically
+    return filtered.sort((a, b) => a.getName().localeCompare(b.getName())); // This will return a sorted array of student names alphabetically
   }
 
   /**
@@ -204,16 +204,17 @@ class LinkedList {
    */
   filterByMinAge(minAge) { // This function will filter the students in the Linked List by minimum age
     let current = this.head; // Start at the head of the Linked List
-    let studentsArray = []; // Create an array to store the student names
+    const filtered = []; // Create an array to store the student names
     while (current) { // While there is a current node, I will keep traversing the Linked List
-      if (current.data.age >= minAge) { // If the current node's data age is greater than or equal to the minimum age we are looking for
-        studentsArray.push(current.data); // Add the student data to the array 
+      if (current.data.getYear() >= minAge) { // If the current node's data age is greater than or equal to the minimum age we are looking for. Using getYear() from the Student.js file to access the private field #year in the Student class
+        // This will check if the student is at least the minimum age
+        filtered.push(current.data); // Add the student data to the array 
       }
       current = current.next; // Move to the next node  
     }
 
     // TODO
-    return this.#sortStudentsByName(studentsArray); // This will return a sorted array of student names alphabetically
+    return filtered.sort((a, b) => a.getName().localeCompare(b.getName())); // This will return a sorted array of student names alphabetically
   }
 
   /**
@@ -222,18 +223,23 @@ class LinkedList {
    * RETURNS:   None
    */
   async saveToJson(fileName) { // This function will save the Linked List to a JSON file
-    const fs = require('fs').promises; // This is loading in a built in file saving function from Node.js to save the Linked List to a JSON file
+    const fs = require('fs').promises; // This is loading in a built in file saving function from Node.js to save the Linked List to a JSON file. I used promises as W3 schools says it is recommended for modern applications. Other methods said they are older methods and not recommended for modern applications.
     let current = this.head; // Start at the head of the Linked List to loop through the nodes to save the information
-    let studentsArray = []; // I am creating an array to store the student data that will be saved in JSON format
+    let studentsArray = []; // I am creating an array to store the student data that will be saved in JSON format. I am using [] to create an empty array
     
     while (current) { // While there is a current node, I will keep traversing the Linked List
-      studentsArray.push(current.data); // Add student info to the array
+      studentsArray.push({ // Pushing the student data to the array in JSON format
+        name: current.data.getName(), // Getting the name of the student using getName() from the Student.js file to access the private field #name in the Student class
+        year: current.data.getYear(), // Getting the year of the student using getYear() from the Student.js file to access the private field #year in the Student class
+        email: current.data.getEmail(), // Getting the email of the student using getEmail() from the Student.js file to access the private field #email in the Student class
+        specialization: current.data.getSpecialization() // Getting the specialization of the student using getSpecialization() from the Student.js file to access the private field #specialization in the Student class
+      });
       current = current.next; // Move to the next node. This will continue to traverse the Linked List until it reaches the end
     }
   
-    try { // This is a try-catch block to handle any errors that may occur while saving the data
-      const jsonString = JSON.stringify(studentsArray, null, 2); // Convert the array of students to a JSON string with pretty-printing (2 spaces for indentation)
-      await fs.writeFile(fileName, jsonString, 'utf8'); // Write the JSON string to the specified file
+    try { // This is to handle any errors that may occur while saving the data
+      const jsonString = JSON.stringify(studentsArray, 2); // Convert the array of students to a JSON string. 2 is for spacing (makes the JSON file more readable)
+      await fs.writeFile(fileName, jsonString, 'utf8'); // Write the JSON string to the specified file. utf8 is telling the file system to write the file as a string
       console.log(`Saved ${studentsArray.length} students to ${fileName}`); // Log the number of students saved and the file name. This will display a message indicating that the data has been saved to the specified file
     
     } catch (error) {
@@ -254,12 +260,14 @@ class LinkedList {
     const fs = require('fs').promises; // Using the built-in file system to read the JSON file
     
     try { // This is a try-catch block to handle any errors that may occur while loading the data
-      const data = await fs.readFile(fileName, 'utf8'); // Read the file with the specified file name
+      const data = await fs.readFile(fileName, 'utf8'); // Read the file with the specified file name. utf8 is telling the file system to read the file as a string
+      // I am using await to wait for the file to be read before continuing. This is because reading a file is an asynchronous operation, so I need to wait for it to finish before continuing
+      // If the file does not exist, it will throw an error and the catch block will handle it
       const studentsArray = JSON.parse(data); // Turning the string of JSON data into an array of students
       this.clearStudents(); // Clear the existing Linked List before loading new data
       
       for (const studentData of studentsArray) { // Loop through each student in the array
-        const student = new Student(studentData.name, studentData.year, studentData.email, studentData.specialization); // Create a new Student instance
+        const student = new Student(studentData.name, studentData.year, studentData.email, studentData.specialization); // This creates a new Student instance for each student in the array
         this.addStudent(student); // Add and saves the student to the Linked List
        
         // TODO //

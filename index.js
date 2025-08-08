@@ -68,8 +68,8 @@ async function handleCommand(command) { // Split the command into operation and 
       console.log('Removing student...')
       // --------> WRITE YOUR CODE BELOW
       
-      const [removeEmail] = args; // Get the email from the args array using destructuring. I am getting removeEmail from the args
-      studentManagementSystem.removeStudent(removeEmail); // This implements the linkedlist. Remove the student from the Linked List
+      const [removeEmail] = args; // Get the email from the args array using destructuring
+      studentManagementSystem.removeStudent(removeEmail); // This implements the linkedlist. Removes the student from the Linked List
       console.log(studentManagementSystem.displayStudents()); // This will display the updated Linked List after removal
 
       // --------> WRITE YOUR CODE ABOVE
@@ -150,6 +150,10 @@ async function handleCommand(command) { // Split the command into operation and 
       // --------> WRITE YOUR CODE BELOW
       
       const [loadFileName] = args; // Get the file name from the args
+      if (!loadFileName) { // Check if the loadFileName is provided, if not, display a message
+        console.log('Please provide a file name.'); // If not provided, display a message  
+        break; // Exit the switch case if no file name is provided
+      }
       await studentManagementSystem.loadFromJSON(loadFileName); // Load the data from the specified JSON file into the Linked List
       console.log(studentManagementSystem.displayStudents()); // Display the updated Linked List after loading data by calling displayStudents. It is beeing saved through the loadFromJSON method in the LinkedList class.
       // This will display the students in the linked list after loading data from the JSON file
